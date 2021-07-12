@@ -1,21 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class NewTransaction extends StatelessWidget {
+class NewTransaction extends StatefulWidget {
   // const ({ Key? key }) : super(key: key);
   final addtx;
 
-  final titleController = TextEditingController();
-  final amountController = TextEditingController();
-
   NewTransaction(this.addtx);
+
+  @override
+  _NewTransactionState createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final titleController = TextEditingController();
+
+  final amountController = TextEditingController();
+  DateTime selectdate = DateTime.now();
 
   void submitdata() {
     final enteredTitle = titleController.text;
     final enterdAmount = double.parse(amountController.text);
-    if (enteredTitle.isEmpty || enterdAmount < 0) {
+    if (enteredTitle.isEmpty || enterdAmount < 0 || selectdate == null) {
       return;
     }
-    addtx(enteredTitle, enterdAmount);
+
+    widget.addtx(enteredTitle, enterdAmount, selectdate);
+    Navigator.of(context).pop();
+  }
+
+  void presentdatepicker() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2010),
+      lastDate: DateTime.now(),
+    ).then((pickedDate) {
+      if (pickedDate == null) {
+        return;
+      }
+      setState(() {
+        selectdate = pickedDate;
+      });
+    });
   }
 
   @override
@@ -46,6 +72,30 @@ class NewTransaction extends StatelessWidget {
               onSubmitted: (_) => submitdata(),
             ),
             Container(
+              height: 70,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      selectdate == null
+                          ? 'No date choose'
+                          : 'pickeddate ${DateFormat.yMd().format(selectdate)}',
+                    ),
+                  ),
+                  FlatButton(
+                    textColor: Theme.of(context).primaryColor,
+                    onPressed: () => presentdatepicker(),
+                    child: Text(
+                      'choose date',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Container(
               padding: EdgeInsets.symmetric(vertical: 10),
               child: ElevatedButton(
                 child: Text(
@@ -53,9 +103,9 @@ class NewTransaction extends StatelessWidget {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
-                    color: Colors.red,
                   ),
                 ),
+
                 onPressed: () => submitdata(),
                 //  print(amountController.value);
               ),
