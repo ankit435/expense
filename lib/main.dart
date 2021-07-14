@@ -105,7 +105,25 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final islansacpe = mediaQuery.orientation == Orientation.landscape;
-
+    final PreferredSizeWidget a = CupertinoNavigationBar();
+    final PreferredSizeWidget b = AppBar();
+/*
+    final PreferredSizeWidget appBar = Platform.isIOS
+        ? CupertinoNavigationBar(
+            middle: Text(
+              'Personal Expenses',
+            ),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                GestureDetector(
+                  child: Icon(CupertinoIcons.add),
+                  onTap: () => _startAddNewTransaction(context),
+                ),
+              ],
+            ),
+          )
+         */
     final appBar = AppBar(
       // backgroundColor: Colors.red,
       title: Text(
@@ -190,3 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
   }
 }
+
+
+
+// final appBar = AppBar
